@@ -13,6 +13,7 @@
     --accent-dark: #8a3f1f;
     --line: #ddd6c9;
     --pin: #c0392b;
+    --pin-scale: 1;
   }
   * { box-sizing: border-box; }
   body {
@@ -56,14 +57,14 @@
     position: absolute;
     width: 30px;
     height: 30px;
-    margin-left: -15px;
-    margin-top: -30px;
     text-decoration: none;
     display: block;
+    transform: translate(-50%, -100%) scale(var(--pin-scale));
+    transform-origin: 50% 100%;
     transition: transform 0.15s ease;
   }
   a.pin:hover {
-    transform: scale(1.18);
+    transform: translate(-50%, -100%) scale(calc(var(--pin-scale) * 1.18));
   }
   a.pin svg { width: 100%; height: 100%; display: block; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.35)); }
 
@@ -200,5 +201,25 @@
     </svg>EM21</a>
   </div>
 </div>
+
+<script>
+(function () {
+  var root = document.documentElement;
+
+  function updatePinScale() {
+    var vv = window.visualViewport;
+    var zoom = vv ? vv.scale : 1;
+    if (!zoom || zoom < 1) zoom = 1;
+    root.style.setProperty('--pin-scale', (1 / zoom).toFixed(4));
+  }
+
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', updatePinScale);
+    window.visualViewport.addEventListener('scroll', updatePinScale);
+  }
+  window.addEventListener('resize', updatePinScale);
+  updatePinScale();
+})();
+</script>
 </body>
 </html>
